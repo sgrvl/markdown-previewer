@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class Editor extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			input: "",
+		};
+		this.handleChange = this.handleChange.bind(this);
+	}
+	handleChange(e) {
+		this.setState({ input: e.target.value });
+	}
+
+	componentDidMount() {
+		fetch("/sample.txt")
+			.then((r) => r.text())
+			.then((text) => {
+				this.setState({ input: text });
+			});
+	}
+
+	render() {
+		return (
+			<div id="editor">
+				<h1>Editor</h1>
+				<textarea
+					name="editor"
+					id="editor"
+					cols="100"
+					rows="20"
+					value={this.state.input}
+					onChange={this.handleChange}
+				></textarea>
+				<Previewer input={window.marked(`${this.state.input}`)} />
+			</div>
+		);
+	}
 }
 
-export default App;
+class Previewer extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+	render() {
+		return (
+			<div>
+				<h1>Preview</h1>
+				<div
+					id="preview"
+					dangerouslySetInnerHTML={{ __html: `${this.props.input}` }}
+				/>
+			</div>
+		);
+	}
+}
+
+export default Editor;
