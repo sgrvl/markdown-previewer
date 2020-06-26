@@ -23,7 +23,7 @@ class Editor extends Component {
 
 	render() {
 		return (
-			<div id="editor">
+			<div>
 				<h1>Editor</h1>
 				<textarea
 					name="editor"
